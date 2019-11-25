@@ -1,0 +1,23 @@
+[
+  {
+    "id": "01",
+    "firstName": "Carlos",
+    "lastName": "Rodrigues",
+    "email": "carlos@test.com",
+    "list": []
+  },
+  {
+    "id": "02",
+    "firstName": "Flavia",
+    "lastName": "Rodrigues",
+    "email": "flavia@test.com",
+    "list": []
+  },
+  {
+    "id": "03",
+    "firstName": "Maria",
+    "lastName": "Santos",
+    "email": "maria@test.com",
+    "list": []
+  }
+]
