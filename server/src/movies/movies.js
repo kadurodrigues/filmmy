@@ -1,4 +1,5 @@
 const movies = require('../../data/movies.json');
+const schema = require('./movie.schema');
 
 const getAll = (req, res) => {
   res.send({
