@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAll, findOne } = require('./movies');
+const { findMovie, discover } = require('./movies');
 
 router
-  .get('/', getAll)
-  .get('/:id', findOne);
+  .get('/movie/:id', findMovie)
+  .get('/discover', discover)
 
 module.exports = router;

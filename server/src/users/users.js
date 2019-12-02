@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { User } = require('./user-schema');
+const { User } = require('../models/user');
 const { userValidation } = require('./user-validation');
 
 /** Create a new user */
