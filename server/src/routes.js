@@ -3,6 +3,10 @@ const routes = express.Router();
 
 const { findAll, findOne, create } = require('./controllers/user');
 const { discover, findMovie } = require('./controllers/movies');
+const { auth } = require('./controllers/authentication');
+
+/** Authentication route */
+routes.post('/api/auth', auth);
 
 /** User routes */
 routes
