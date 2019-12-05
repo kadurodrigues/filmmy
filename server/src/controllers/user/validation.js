@@ -6,9 +6,9 @@ const userValidation = user => {
     lastName: Joi.string().max(255).required(),
     email: Joi.string().max(255).min(8).email().required(),
     password: Joi.string().max(1024).min(6).required()
-  })
+  });
 
   return schema.validate(user);
 }
 
-exports.userValidation = userValidation;
+module.exports = userValidation;

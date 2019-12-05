@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-const schema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
     maxlength: 255,
@@ -23,9 +24,21 @@ const schema = new mongoose.Schema({
     minlength: 8,
     maxlength: 1024,
     required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-})
+});
 
-const User = mongoose.model('User', schema);
+/** Encript the password before save */
+UserSchema.pre('save', async function(next) {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  
+  next();
+});
+
+const User = mongoose.model('User', UserSchema);
 
 exports.User = User;
