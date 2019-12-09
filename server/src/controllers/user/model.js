@@ -22,7 +22,6 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     minlength: 8,
-    maxlength: 1024,
     required: true
   },
   createdAt: {
@@ -35,7 +34,6 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  
   next();
 });
 

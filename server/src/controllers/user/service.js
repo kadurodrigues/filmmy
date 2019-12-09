@@ -1,5 +1,6 @@
 const { User } = require('./model');
 const userValidation = require('./validation');
+const { generateToken } = require('../../utils');
 
 module.exports = {
   /** Create a new user */
@@ -11,13 +12,13 @@ module.exports = {
     try {
       if (await User.findOne({ email })) 
         return res.status(400).send({ error: 'User already exists' });
-      
-      const user = await User.create({ firstName, lastName, email, password });
+  
+      const user = new User({ firstName, lastName, email, password });
       await user.save();
 
-      res.send({
-        message: 'User created succesful',
-        status: 200
+      return res.send({
+        user,
+        token: await generateToken({ id: user._id })
       });
     } catch (ex) {
       res.status(500).send(ex.message);
