@@ -7,6 +7,7 @@ module.exports = {
   async create(req, res) {
     const { firstName, lastName, email, password } = req.body;
     const { error } = userValidation(req.body);
+    
     if (error) return res.status(400).send(error.details[0].message);
 
     try {
