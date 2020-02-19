@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ListSchema = new mongoose.Schema({
+const userListSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true
@@ -16,6 +16,6 @@ const ListSchema = new mongoose.Schema({
   }
 });
 
-const List = mongoose.model('List', ListSchema);
+const UserList = mongoose.model('usersLists', userListSchema);
 
-exports.List = List;
+exports.UserList = UserList;

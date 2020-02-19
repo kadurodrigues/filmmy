@@ -1,8 +1,9 @@
-const { User } = require('./model');
-const userValidation = require('./validation');
-const { generateToken } = require('../../utils');
+const { User } = require('../models/userModel');
+const userValidation = require('../validations/userValidation');
+const generateToken = require('../utils/generateToken');
 
 module.exports = {
+
   /** Create a new user */
   async create(req, res) {
     const { firstName, lastName, email, password } = req.body;
@@ -43,7 +44,10 @@ module.exports = {
   /** Find a specific user */
   async findOne(req, res) {
     try {
-      const user = await User.findById(req.params.id).select('-password')
+      const user = await User
+        .findById(req.params.id)
+        .select(['-password', '-createdAt'])
+        
       if(!user) return res.status(404).send('User not found!');
   
       res.send({

@@ -1,4 +1,4 @@
-const generateToken = require('./generate-token');
+const generateToken = require('./generateToken');
 
 module.exports = {
   generateToken
