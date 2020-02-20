@@ -4,7 +4,7 @@ const router = express.Router();
 const { create, findAll, findOne } = require('./controllers/usersController');
 const { discover, findMovie } = require('./controllers/moviesController');
 const { auth } = require('./controllers/authController');
-const { createList, findUserLists } = require('./controllers/usersListsController');
+const { createList, findUserLists, addMovieToList } = require('./controllers/listsController');
 
 const authMiddleware = require('./middleware/auth');
 
@@ -26,6 +26,7 @@ router
 router
   .get('/lists/:id', authMiddleware, findUserLists)
   .post('/create-list', authMiddleware, createList)
+  .post('/add-movie', authMiddleware, addMovieToList)
 
 module.exports = (app) => {
   app.use('/api', router);

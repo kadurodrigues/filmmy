@@ -20,7 +20,23 @@ const listValidation = list => {
   return schema.validate(list)
 }
 
+const addMovieValidation = data => {
+  const schema = Joi.object({
+    listId: Joi.string().required(),
+    movie: {
+      id: Joi.number().required(),
+      title: Joi.string().max(255).required(),
+      overview: Joi.string().required(),
+      backdrop_path: Joi.string().required(),
+      genres: Joi.array().min(1).required()
+    }
+  });
+
+  return schema.validate(data)
+}
+
 module.exports = {
   userValidation,
-  listValidation
+  listValidation,
+  addMovieValidation
 };

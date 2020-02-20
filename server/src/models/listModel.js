@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
+const { movieSchema } = require('./movieModel');
 
-const userListSchema = new mongoose.Schema({
+const listSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true
   },
-  listName: {
+  name: {
     type: String,
     maxlength: 255,
     required: true
+  },
+  movies: {
+    type: [movieSchema]
   },
   createdAt: {
     type: Date,
@@ -16,6 +20,6 @@ const userListSchema = new mongoose.Schema({
   }
 });
 
-const UserList = mongoose.model('usersLists', userListSchema);
+const List = mongoose.model('lists', listSchema);
 
-exports.UserList = UserList;
+exports.List = List;
