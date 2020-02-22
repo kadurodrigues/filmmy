@@ -1,7 +1,12 @@
 const { List } = require('../models/listModel');
-const { listValidation, addMovieValidation } = require('../validations');
+const { 
+  listValidation, 
+  addMovieValidation, 
+  removeMovieValidation 
+} = require('../validations');
 
 module.exports = {
+  /** Create a new movies list */
   async createList(req, res) {
     const { userId, name } = req.body;
     const { error } = listValidation(req.body);
@@ -18,7 +23,8 @@ module.exports = {
     }
   },
 
-  async findUserLists(req, res) {
+  /** Find user lists */
+  async findLists(req, res) {
     const { id } = req.params
 
     try {
@@ -36,25 +42,51 @@ module.exports = {
     }
   },
 
-  async addMovieToList(req, res) {
+  /** Add a movie to a list */
+  async addMovie(req, res) {
     const { listId, movie } = req.body;
     const { error } = addMovieValidation(req.body);
     
     if (error) return res.status(400).send(error.details[0].message);
 
     try {
-      const list = await List.findByIdAndUpdate(
+      let list = await List.findByIdAndUpdate(
         { _id: listId },
         { $push: { movies: movie } },
-        { new: true }
-      )
+        { new: true } 
+      );
       
-      res.send({
-        list,
-        status: 200
-      })
+      if (!list) return res.status(404).send({
+        errorMessage: 'List Not Found'
+      });
+
+      res.status(200).send({ list });
     } catch (error) {
       res.status(500).send(error.message);
     }
-  } 
+  },
+  
+  /** Remove a movie from a list */
+  async removeMovie(req, res) {
+    const { listId, movieId } = req.body;
+    const { error } = removeMovieValidation(req.body);
+    
+    if (error) return res.status(400).send(error.details[0].message);
+
+    try {
+      let list = await List.findByIdAndUpdate(
+        { _id: listId },
+        { $pull: { "movies": { "_id": movieId } } },
+        { new: true } 
+      );
+      
+      if (!list) return res.status(404).send({
+        errorMessage: 'List Not Found'
+      });
+
+      res.status(200).send({ list });
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  }
 }

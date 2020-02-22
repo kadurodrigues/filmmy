@@ -35,8 +35,18 @@ const addMovieValidation = data => {
   return schema.validate(data)
 }
 
+const removeMovieValidation = data => {
+  const schema = Joi.object({
+    listId: Joi.string().required(),
+    movieId: Joi.string().required()
+  });
+
+  return schema.validate(data)
+}
+
 module.exports = {
   userValidation,
   listValidation,
-  addMovieValidation
+  addMovieValidation,
+  removeMovieValidation
 };

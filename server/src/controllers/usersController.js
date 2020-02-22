@@ -3,7 +3,6 @@ const userValidation = require('../validations/userValidation');
 const generateToken = require('../utils/generateToken');
 
 module.exports = {
-
   /** Create a new user */
   async create(req, res) {
     const { firstName, lastName, email, password } = req.body;
