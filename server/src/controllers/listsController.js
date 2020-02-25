@@ -2,7 +2,8 @@ const { List } = require('../models/listModel');
 const { 
   listValidation, 
   addMovieValidation, 
-  removeMovieValidation 
+  removeMovieValidation,
+  removeListValidation 
 } = require('../validations');
 
 module.exports = {
@@ -85,6 +86,28 @@ module.exports = {
       });
 
       res.status(200).send({ list });
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  },
+
+  /** Remove a list */
+  async removeList(req, res) {
+    const { listId } = req.body;
+    const { error } = removeListValidation(req.body);
+    
+    if (error) return res.status(400).send(error.details[0].message);
+
+    try {
+      let result = await List.findByIdAndRemove(
+        { _id: listId }
+      );
+      
+      if (!result) return res.status(404).send({
+        errorMessage: 'List Not Found'
+      });
+
+      res.status(200).send({ result });
     } catch (error) {
       res.status(500).send(error.message);
     }

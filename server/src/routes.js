@@ -11,7 +11,8 @@ const {
   createList,
   findLists,
   addMovie,
-  removeMovie
+  removeMovie,
+  removeList
 } = require('./controllers');
 
 const authMiddleware = require('./middleware/auth');
@@ -36,6 +37,7 @@ router
   .post('/lists/create', authMiddleware, createList)
   .post('/lists/add-movie', authMiddleware, addMovie)
   .put('/lists/remove-movie', authMiddleware, removeMovie)
+  .put('/lists/remove-list', authMiddleware, removeList)
 
 module.exports = (app) => {
   app.use('/api', router);
