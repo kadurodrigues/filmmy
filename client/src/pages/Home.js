@@ -1,22 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import React, { useContext } from 'react';
+import { MoviesContext } from '../contexts/moviesContext'
 import List from '../components/List';
 
 function Home() {
-  const [movies, setMovies] = useState([]);
-  useEffect(() => {
-    async function fetchMovies() {
-      const { data } = await axios.get('http://localhost:3000/api/movies/discover');
-      setMovies(data.results);
-    }
-    fetchMovies();
-  }, []);
-
+  const { movies } = useContext(MoviesContext);
   return(
     <>
       <h2>Discover</h2>
-      <List movies={movies} />
+      { movies !== undefined && <List movies={movies} /> }
     </>
   );
 }
