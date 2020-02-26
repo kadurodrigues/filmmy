@@ -1,13 +1,18 @@
-import React, { useContext } from 'react';
-import { MoviesContext } from '../contexts/moviesContext'
+import React from 'react';
 import List from '../components/List';
+import useFetchMovies from '../hooks/useFetchMovies';
 
 function Home() {
-  const { movies } = useContext(MoviesContext);
+  const { movies } = useFetchMovies();
+
+  const handleMovieSelected = (movieID) => {
+    console.log('movie selected', movieID)
+  }
+
   return(
     <>
-      <h2>Discover</h2>
-      { movies !== undefined && <List movies={movies} /> }
+      <h2>Home</h2>
+      <List movies={movies} handleClick={handleMovieSelected} />
     </>
   );
 }

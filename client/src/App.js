@@ -1,18 +1,18 @@
 import React from 'react';
-import Header from './Header';
-import Home from './pages/Home';
-import AppContext from './contexts/appContext';
+import Header from './components/Header';
+import { StoreProvider } from './store';
 
 import './App.css'
+import Routes from './routes';
 
 function App() {
   return (
-    <AppContext>
+    <StoreProvider>
       <Header />
       <main className="main">
-        <Home />
+        <Routes />
       </main>
-    </AppContext>
+    </StoreProvider>
   );
 }
 

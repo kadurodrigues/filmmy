@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: blueviolet;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  color: #fff;
+}
+
+.user-content {
+  color: #fff;
+}
+
+.user-content p {
+  display: inline-block;
+  margin: 0;
+}

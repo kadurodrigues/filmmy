@@ -7,7 +7,7 @@ module.exports = {
     const { email, password } = req.body;
 
     try {
-      const user = await User.findOne({ email }).select('+password');
+      const user = await User.findOne({ email }).select(['+password', '-createdAt']);
 
       if(!user)
         return res.status(400).send({ error: 'User not found' });

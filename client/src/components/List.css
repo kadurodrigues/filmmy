@@ -7,7 +7,7 @@
 }
 
 .list-item {
-  margin: 2px;
+  margin: 0px 2px 16px;
 }
 
 .poster {
@@ -17,4 +17,14 @@
 
 .poster img {
   max-width: 100%;
+}
+
+.add-movie {
+  border: 0;
+  margin-top: 5px;
+  padding: 6px;
+  border-radius: 4px;
+  color: #fff;
+  background-color: blueviolet;
+  cursor: pointer;
 }

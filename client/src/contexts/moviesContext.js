@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import useFetch from '../hooks/useFetch';
+import useFetch from '../hooks/useFetchMovies';
 import { BASE_URL } from '../utils/constants';
 
 export const MoviesContext = createContext();
