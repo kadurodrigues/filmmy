@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { SET_USER } from '../actions';
+import { SET_USER } from '../actions/types';
 
 const StoreContext = createContext();
 
 const initialState = {
-  user: null
+  user: JSON.parse(window.localStorage.getItem('user')) || null
 };
 
 const reducer = (state, action) => {

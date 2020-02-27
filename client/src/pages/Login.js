@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants';
-import { SET_USER } from '../actions';
+import { setUserStore } from '../actions';
 import { useStore } from '../store';
+import usePersistedState from '../hooks/usePersistedState';
  
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { dispatch } = useStore();
+  const [state, setUserLocalStorage] = usePersistedState('user');
+
+  const handleClearForm = () => {
+    setEmail('');
+    setPassword('');
+  }
     
   const handleLogin = async () => {
     try {  
@@ -15,9 +22,9 @@ function Login() {
         data: { user } 
       } = await axios.post(`${BASE_URL}/auth`, { email, password });
 
-      dispatch({ type: SET_USER, payload: user });
-      setEmail('');
-      setPassword('');
+      setUserLocalStorage(user);
+      dispatch(setUserStore(user));
+      handleClearForm();
 
     } catch (error) {
       console.log(error);
