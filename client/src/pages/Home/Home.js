@@ -1,6 +1,6 @@
 import React from 'react';
-import List from '../components/List';
-import useFetchMovies from '../hooks/useFetchMovies';
+import List from '../../components/List';
+import useFetchMovies from '../../hooks/useFetchMovies';
 
 function Home() {
   const { movies } = useFetchMovies();

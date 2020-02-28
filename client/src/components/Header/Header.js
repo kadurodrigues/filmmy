@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css'
-import { useStore } from '../store';
+import { useStore } from '../../store';
 
 function Header() {
   const { state: { user } } = useStore();

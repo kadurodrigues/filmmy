@@ -18,9 +18,12 @@ function Login() {
     
   const handleLogin = async () => {
     try {  
+      // const { 
+      //   data: { user } 
+      // } = await axios.post(`${BASE_URL}/auth`, { email, password });
       const { 
         data: { user } 
-      } = await axios.post(`${BASE_URL}/auth`, { email, password });
+      } = await axios.get(`${BASE_URL}/auth`);
 
       setUserLocalStorage(user);
       dispatch(setUserStore(user));
