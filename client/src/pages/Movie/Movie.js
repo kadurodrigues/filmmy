@@ -3,17 +3,22 @@ import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
 import { BASE_URL } from '../../utils/constants';
 import Button from '@material-ui/core/Button';
-import DialogForm from '../../components/Dialog';
+import Login from '../../components/Login';
+import UserLists from '../../components/UserLists';
+import { useStore } from '../../store';
 
 function Movie() {
   const [movie, setMovie] = useState({});
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openUserLists, setOpenUserLists] = useState(false);
+  
   const { state: { movieId } } = useLocation();
+  const { state: { user } } = useStore();
 
   useEffect(() => {
     async function fetchMovie() {
       try {
-        const { data } = await axios.get(`${BASE_URL}/movies/${movieId}`);
+        const { data } = await axios.get(`${BASE_URL}/movie/${movieId}`);
         setMovie(data);
       } catch (error) {
         console.log(error);
@@ -23,18 +28,27 @@ function Movie() {
     fetchMovie();
   }, [movieId]);
 
-  const handleClickOpen = () => {
-    setOpenDialog(true);
+  const handleOpenDialog = () => {
+    return user !== null ? setOpenUserLists(true) : setOpenLogin(true)
+  }
+
+  const handleCloseLogin = () => {
+    setOpenLogin(false);
+  }
+
+  const handleCloseUserLists = () => {
+    setOpenUserLists(false);
   }
 
   return (
     <>
-      <Link to="/">
-        Back
-      </Link>
+      <Link to="/">Back</Link>
       <h2>{movie.title}</h2>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>Add Movie</Button>
-      { openDialog && <DialogForm /> }
+      <Button variant="contained" color="primary" onClick={handleOpenDialog}>
+        Add Movie
+      </Button>
+      <Login open={openLogin} onClose={handleCloseLogin} />
+      <UserLists open={openUserLists} onClose={handleCloseUserLists} />
     </>
   )
 }
