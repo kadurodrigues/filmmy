@@ -5,11 +5,16 @@ import useSessionStorage from '../../hooks/useSessionStorage';
 import api from '../../services/api';
 import SingIn from '../SignIn';
 import SignUp from '../SignUp';
+import Alert from '../Alert';
 
 import { AppBar, Dialog, Tabs, Tab } from '@material-ui/core';
+import { ALERT_MSG } from '../../utils/constants';
 
 function Login({ open, onClose }) {
   const [tabValue, setTabValue] = useState(0);
+  const [isError, setError] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
   const [, setToken ] = useSessionStorage('token', '');
   const [, setUser ] = useSessionStorage('user', '');
   const { dispatch } = useStore();
@@ -18,15 +23,17 @@ function Login({ open, onClose }) {
     try {  
       const { 
         data: { user, token } 
-      } = await api.get('/auth', { email, password });
+      } = await api.post('/auth', { email, password });
       
       setToken(token);
       setUser({ _id: user._id, firstName: user.firstName });
       dispatch(setUserStore({_id: user._id, firstName: user.firstName }));
-      onClose(user);
+      onClose({ isLogged: true });
 
     } catch (error) {
-      console.log(error);
+      setAlertSeverity('error');
+      setAlertMessage(ALERT_MSG.authFailed);
+      setError(true);
     }
   }
 
@@ -34,8 +41,13 @@ function Login({ open, onClose }) {
     onClose();
   }
 
+  const handleOnCloseDialog = () => {
+    setError(false);
+    onClose({ isLogged: false });
+  }
+
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+    <Dialog open={open} onClose={handleOnCloseDialog} aria-labelledby="form-dialog-title">
       <AppBar position="static" color="primary">
         <Tabs 
           value={tabValue} 
@@ -46,8 +58,15 @@ function Login({ open, onClose }) {
           <Tab label="Sign Up" />
         </Tabs>
       </AppBar>
+      { isError &&  
+        <Alert
+          message={alertMessage} 
+          severity={alertSeverity} 
+          onClose={() => setError(false)} 
+        /> 
+      }
       {tabValue === 0 ? (
-        <SingIn onSignIn={handleOnSignIn} onClose={onClose} />
+        <SingIn onSignIn={handleOnSignIn} onClose={handleOnCloseDialog} />
       ) : (
         <SignUp onSignUp={handleOnSignUp} onClose={onClose} />
       )}

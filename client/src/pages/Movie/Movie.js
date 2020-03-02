@@ -17,8 +17,8 @@ function Movie() {
     return user !== null ? setOpenUserLists(true) : setOpenLogin(true)
   }
 
-  const handleCloseLogin = userLogged => {
-    if (userLogged) {
+  const handleCloseLogin = ({ isLogged }) => {
+    if (isLogged) {
       setOpenUserLists(true);
     }
     setOpenLogin(false);
@@ -31,7 +31,7 @@ function Movie() {
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Add Movie
       </Button>
-      <Login open={openLogin} onClose={user => handleCloseLogin(user)} />
+      <Login open={openLogin} onClose={event => handleCloseLogin(event)} />
       <UserLists open={openUserLists} onClose={() => setOpenUserLists(false)} />
     </>
   )
