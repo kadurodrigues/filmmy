@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { BASE_URL } from '../utils/constants';
+import api from '../services/api';
 
 const useFetchMovies = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     async function fetchMovies() {
-      const { data: { results } } = await axios.get(`${BASE_URL}/movies/discover`);
+      const { data: { results } } = await api.get('/movies/discover');
       setMovies(results);
     }
 

@@ -8,6 +8,7 @@ const usePersistedState = (key) => {
 
   useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(state));
+    // window.sessionStorage.setItem()
   }, [key, state]);
 
   return [state, setState]

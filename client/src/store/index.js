@@ -4,7 +4,7 @@ import { SET_USER } from '../actions/types';
 const StoreContext = createContext();
 
 const initialState = {
-  user: JSON.parse(window.localStorage.getItem('user')) || null
+  user: JSON.parse(window.sessionStorage.getItem('user')) || null
 };
 
 const reducer = (state, action) => {
