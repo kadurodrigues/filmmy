@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import Login from '../../components/Login';
+import Auth from '../../components/Auth';
 import UserLists from '../../components/UserLists';
 import { useStore } from '../../store';
 import useFetchMovie from '../../hooks/useFetchMovie';
@@ -31,7 +31,7 @@ function Movie() {
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Add Movie
       </Button>
-      <Login open={openLogin} onClose={event => handleCloseLogin(event)} />
+      <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />
       <UserLists open={openUserLists} onClose={() => setOpenUserLists(false)} />
     </>
   )

@@ -3,14 +3,14 @@ import { setUserStore } from '../../actions';
 import { useStore } from '../../store';
 import useSessionStorage from '../../hooks/useSessionStorage';
 import api from '../../services/api';
-import SingIn from '../SignIn';
-import SignUp from '../SignUp';
+import SingIn from './SignIn';
+import SignUp from './SignUp';
 import Alert from '../Alert';
 
 import { AppBar, Dialog, Tabs, Tab } from '@material-ui/core';
 import { ALERT_MSG } from '../../utils/constants';
 
-function Login({ open, onClose }) {
+function Auth({ open, onClose }) {
   const [tabValue, setTabValue] = useState(0);
   const [isError, setError] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -74,4 +74,4 @@ function Login({ open, onClose }) {
   )
 }
 
-export default Login;
+export default Auth;
