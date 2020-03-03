@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Alert from '../Alert';
-
+import { useFormStyles, useDialogStyles } from '../../styles/globalStyles';
 import { 
   DialogContent,
   DialogContentText,
@@ -8,49 +8,53 @@ import {
   TextField,
   Button
 } from '@material-ui/core';
-import { useFormStyles, useDialogStyles } from '../../styles/globalStyles';
+
+const messages = {
+  email: 'Email address is required',
+  password: 'Password is required'
+}
 
 function SignIn({ onSignIn, onClose }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isError, setError] = useState(false);
-  
-  const [isEmailInvalid, setEmailInvalid] = useState(false);
-  const [isPasswordInvalid, setPasswordInvalid] = useState(false);
+  const [inputsValue, setInputsValue] = useState({
+    email: '',
+    password: ''
+  });
 
-  const [emailErrorMessage, setEmailErrorMessage] = useState('');
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-  
+  const [errorMessage, setErrorMessage] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [isInvalid, setInvalid] = useState({
+    email: false,
+    password: false
+  });
+
+  const [isError, setError] = useState(false);  
   const classes = useFormStyles();
   const dialogClasses = useDialogStyles();
 
-  const onEmailChange = (event) => {
-    if (event.target.value === '') {
-      setEmailInvalid(true);
-      setEmailErrorMessage('Email address is required')
+  const onInputChange = ({ target: { name, value } }) => {
+    if (value === '') {
+      setInvalid({...isInvalid, [name]: true });
+      setErrorMessage({...errorMessage, [name]: messages[name]});
     } else {
-      setEmailInvalid(false);
-      setEmailErrorMessage('');
-      setEmail(event.target.value)
+      setInvalid({...isInvalid, [name]: false });
+      setErrorMessage({...errorMessage, [name]: '' });
+      setInputsValue({...inputsValue, [name]: value });
     }
   }
-
-  const onPasswordChange = (event) => {
-    if (event.target.value === '') {
-      setPasswordInvalid(true);
-      setPasswordErrorMessage('Password is required')
-    } else {
-      setPasswordInvalid(false);
-      setPasswordErrorMessage('');
-      setPassword(event.target.value)
-    }
-  }
-
+    
   const handleSignIn = () => {
-    if (email === '' || password === '' || isEmailInvalid || isPasswordInvalid) {
+    if (
+      inputsValue.email === '' || 
+      inputsValue.password === '' ||
+      isInvalid.email || 
+      isInvalid.password 
+    ) {
       setError(true)
     } else {
-      onSignIn({ email, password })
+      onSignIn(inputsValue)
     }
   }
 
@@ -64,27 +68,27 @@ function SignIn({ onSignIn, onClose }) {
           <TextField
             required
             autoFocus
-            id="email"
             label="Email"
             type="email"
+            name="email"
             variant="outlined"
             className={classes.textField}
-            helperText={emailErrorMessage}
-            error={isEmailInvalid}
+            helperText={errorMessage.email}
+            error={isInvalid.email}
             fullWidth
-            onChange={onEmailChange}
+            onChange={onInputChange}
           />
           <TextField
             required
-            id="password"
             label="Password"
             type="password"
+            name="password"
             variant="outlined"
             className={classes.textField}
-            helperText={passwordErrorMessage}
-            error={isPasswordInvalid}
+            helperText={errorMessage.password}
+            error={isInvalid.password}
             fullWidth
-            onChange={onPasswordChange}
+            onChange={onInputChange}
           />
         </form>
         { isError &&  
