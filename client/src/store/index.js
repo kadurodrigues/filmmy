@@ -1,18 +1,19 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { SET_USER } from '../actions/types';
+import { SET_USER, SET_USER_LISTS } from '../actions/types';
 
 const StoreContext = createContext();
 
 const initialState = {
-  user: JSON.parse(window.sessionStorage.getItem('user')) || null
+  user: JSON.parse(window.sessionStorage.getItem('user')) || null,
+  lists: []
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
     case SET_USER:
-      return {
-        user: {...state.user, ...action.payload}
-      } 
+      return {...state, user: action.payload}
+    case SET_USER_LISTS:
+      return {...state, lists: action.payload} 
     default:
       throw new Error();
   }

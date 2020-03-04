@@ -13,14 +13,21 @@ import {
 import Spinner from '../Spinner';
 import Alert from '../Alert';
 
-import { useStore } from '../../store';
 import useFetchUserLists from '../../hooks/useFetchUserLists';
 import { useDialogStyles } from '../../styles/globalStyles';
+import { useStore } from '../../store';
 
 function UserLists({ open, onClose }) {
-  const { state: { user } } = useStore();
   const [listIndex, setListIndex] = useState(0);
-  const { lists, isLoading, hasRequestFailed, setHasRequestFailed } = useFetchUserLists(user._id);
+  const { state: { lists } } = useStore();
+
+  const {  
+    isLoading, 
+    hasRequestFailed, 
+    setHasRequestFailed,
+    errorMessage 
+  } = useFetchUserLists();
+
   const classes = useDialogStyles();
 
   return (
@@ -28,7 +35,7 @@ function UserLists({ open, onClose }) {
       <DialogTitle id="form-dialog-title">My Lists</DialogTitle>
       <DialogContent className={classes.dialogContent}>
         {isLoading && <Spinner />}
-        {hasRequestFailed && <Alert severity="error" message="Failed to access your lists" onClose={() => setHasRequestFailed(false)} />}
+        {hasRequestFailed && <Alert severity="error" message={errorMessage} onClose={() => setHasRequestFailed(false)} />}
         <List component="nav" aria-label="user movies list">
           {lists.length ? lists.map(({ _id, name }, index) => (
             <ListItem
