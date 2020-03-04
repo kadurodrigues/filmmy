@@ -15,19 +15,19 @@ function Auth({ open, onClose }) {
   const [isError, setError] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
-  const [, setToken ] = useSessionStorage('token', '');
-  const [, setUser ] = useSessionStorage('user', '');
+  const [, setToken] = useSessionStorage('token', '');
+  const [, setUser] = useSessionStorage('user', '');
   const { dispatch } = useStore();
-    
+
   const handleOnSignIn = async ({ email, password }) => {
-    try {  
-      const { 
-        data: { user, token } 
+    try {
+      const {
+        data: { user, token }
       } = await api.post('/auth', { email, password });
-      
+
       setToken(token);
       setUser({ _id: user._id, firstName: user.firstName });
-      dispatch(setUserStore({_id: user._id, firstName: user.firstName }));
+      dispatch(setUserStore({ _id: user._id, firstName: user.firstName }));
       onClose({ isLogged: true });
 
     } catch (error) {
@@ -49,27 +49,27 @@ function Auth({ open, onClose }) {
   return (
     <Dialog open={open} onClose={handleOnCloseDialog} aria-labelledby="form-dialog-title">
       <AppBar position="static" color="primary">
-        <Tabs 
-          value={tabValue} 
-          onChange={(event, newValue) => setTabValue(newValue)} 
+        <Tabs
+          value={tabValue}
+          onChange={(event, newValue) => setTabValue(newValue)}
           aria-label="Authentication Tabs"
           variant="fullWidth">
           <Tab label="Sign In" />
           <Tab label="Sign Up" />
         </Tabs>
       </AppBar>
-      { isError &&  
+      {isError &&
         <Alert
-          message={alertMessage} 
-          severity={alertSeverity} 
-          onClose={() => setError(false)} 
-        /> 
+          message={alertMessage}
+          severity={alertSeverity}
+          onClose={() => setError(false)}
+        />
       }
       {tabValue === 0 ? (
         <SingIn onSignIn={handleOnSignIn} onClose={handleOnCloseDialog} />
       ) : (
-        <SignUp onSignUp={handleOnSignUp} onClose={onClose} />
-      )}
+          <SignUp onSignUp={handleOnSignUp} onClose={onClose} />
+        )}
     </Dialog>
   )
 }

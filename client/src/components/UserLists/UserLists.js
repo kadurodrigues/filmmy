@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { 
+import {
   Dialog,
   DialogContent,
   DialogTitle,
@@ -10,39 +10,36 @@ import {
   Button
 } from '@material-ui/core';
 
-function UserLists({ open, onClose }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+import Spinner from '../Spinner';
+import Alert from '../Alert';
 
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
-  };
+import { useStore } from '../../store';
+import useFetchUserLists from '../../hooks/useFetchUserLists';
+import { useDialogStyles } from '../../styles/globalStyles';
+
+function UserLists({ open, onClose }) {
+  const { state: { user } } = useStore();
+  const [listIndex, setListIndex] = useState(0);
+  const { lists, isLoading, hasRequestFailed, setHasRequestFailed } = useFetchUserLists(user._id);
+  const classes = useDialogStyles();
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">My Lists</DialogTitle>
-      <DialogContent> 
+      <DialogContent className={classes.dialogContent}>
+        {isLoading && <Spinner />}
+        {hasRequestFailed && <Alert severity="error" message="Failed to access your lists" onClose={() => setHasRequestFailed(false)} />}
         <List component="nav" aria-label="user movies list">
-          <ListItem
-            button
-            selected={selectedIndex === 0}
-            onClick={event => handleListItemClick(event, 0)}
-          >
-            <ListItemText primary="List One" />
-          </ListItem>
-          <ListItem
-            button
-            selected={selectedIndex === 1}
-            onClick={event => handleListItemClick(event, 1)}
-          >
-            <ListItemText primary="List Two" />
-          </ListItem>
-          <ListItem
-            button
-            selected={selectedIndex === 2}
-            onClick={event => handleListItemClick(event, 2)}
-          >
-            <ListItemText primary="List Three" />
-          </ListItem>
+          {lists.length ? lists.map(({ _id, name }, index) => (
+            <ListItem
+              key={_id}
+              button
+              selected={listIndex === index}
+              onClick={() => setListIndex(index)}
+            >
+              <ListItemText primary={name} />
+            </ListItem>
+          )) : null}
         </List>
       </DialogContent>
       <DialogActions>

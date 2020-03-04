@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Alert from '../Alert';
 import { useFormStyles, useDialogStyles } from '../../styles/globalStyles';
-import { 
+import {
   DialogContent,
   DialogContentText,
   DialogActions,
@@ -30,27 +30,27 @@ function SignIn({ onSignIn, onClose }) {
     password: false
   });
 
-  const [isError, setError] = useState(false);  
+  const [isError, setError] = useState(false);
   const classes = useFormStyles();
   const dialogClasses = useDialogStyles();
 
   const onInputChange = ({ target: { name, value } }) => {
     if (value === '') {
-      setInvalid({...isInvalid, [name]: true });
-      setErrorMessage({...errorMessage, [name]: messages[name]});
+      setInvalid({ ...isInvalid, [name]: true });
+      setErrorMessage({ ...errorMessage, [name]: messages[name] });
     } else {
-      setInvalid({...isInvalid, [name]: false });
-      setErrorMessage({...errorMessage, [name]: '' });
-      setInputsValue({...inputsValue, [name]: value });
+      setInvalid({ ...isInvalid, [name]: false });
+      setErrorMessage({ ...errorMessage, [name]: '' });
+      setInputsValue({ ...inputsValue, [name]: value });
     }
   }
-    
+
   const handleSignIn = () => {
     if (
-      inputsValue.email === '' || 
+      inputsValue.email === '' ||
       inputsValue.password === '' ||
-      isInvalid.email || 
-      isInvalid.password 
+      isInvalid.email ||
+      isInvalid.password
     ) {
       setError(true)
     } else {
@@ -91,12 +91,12 @@ function SignIn({ onSignIn, onClose }) {
             onChange={onInputChange}
           />
         </form>
-        { isError &&  
+        {isError &&
           <Alert
-            message="Please provide a valid email and password." 
-            severity="error" 
-            onClose={() => setError(false)} 
-          /> 
+            message="Please provide a valid email and password."
+            severity="error"
+            onClose={() => setError(false)}
+          />
         }
       </DialogContent>
       <DialogActions>

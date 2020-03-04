@@ -27,12 +27,12 @@ function Movie() {
   return (
     <>
       <Link to="/">Back</Link>
-      { movie && <h2>{movie.title}</h2> }
+      {movie && <h2>{movie.title}</h2>}
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Add Movie
       </Button>
-      <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />
-      <UserLists open={openUserLists} onClose={() => setOpenUserLists(false)} />
+      {openLogin && <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />}
+      {openUserLists && <UserLists open={openUserLists} onClose={() => setOpenUserLists(false)} />}
     </>
   )
 }

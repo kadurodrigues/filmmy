@@ -10,5 +10,8 @@ export const useFormStyles = makeStyles(theme => ({
 export const useDialogStyles = makeStyles(theme => ({
   dialogContentText: {
     marginTop: theme.spacing(2),
+  },
+  dialogContent: {
+    textAlign: 'center'
   }
 }));
