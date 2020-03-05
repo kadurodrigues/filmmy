@@ -32,7 +32,7 @@ function Movie() {
         Add Movie
       </Button>
       {openLogin && <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />}
-      {openUserLists && <UserLists open={openUserLists} onClose={() => setOpenUserLists(false)} />}
+      {openUserLists && <UserLists open={openUserLists} movieSelected={movie} onClose={() => setOpenUserLists(false)} />}
     </>
   )
 }
