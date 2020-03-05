@@ -1,55 +1,26 @@
 import { useState, useCallback } from 'react';
+import { useStore } from '../store';
+import { setUserLists } from '../actions';
+import useSessionStorage from './useSessionStorage';
 import api from '../services/api';
 
-const useFetchData = ({ url, headerOptions }) => {
-  const [res, setResponse] = useState({ data: null, isLoading: false, error: null });
+const useFetchData = () => {
+  const { state: { user }, dispatch } = useStore();
+  const [response, setResponse] = useState({ lists: [], isLoading: false, error: null });
+  const [token] = useSessionStorage('token');
+  const [options, setOptions] = useState({ headers: { 'authorization': `Bearer ${token}` }});
 
-  // You POST method here
-  const callAPI = useCallback(() => {
-    setResponse(prevState => ({ ...prevState, isLoading: true }));
+  const getUserLists = useCallback(async () => {
+    try {
+      const { data: { lists } } = await api.get(`/lists/${user._id}`, options);
+      setResponse({ lists, isLoading: false, error: null });
+      dispatch(setUserLists(lists));
+    } catch (error) {
+      setResponse({ lists: [], isLoading: false, error: error.message });
+    }
+  }, [user, dispatch, options])
 
-    api.get(url, headerOptions).then(res => {
-      setResponse({ data: res.data, isLoading: false, error: null });
-    }).catch((error) => {
-      setResponse({ data: null, isLoading: false, error: error.message });
-    })
-
-  }, [url, headerOptions])
-
-  // const getData = useCallback(async () => {
-  //   try {
-  //     const { data } = await api.get(url, headerOptions);
-  //     console.log('api called');
-  //     setResponse({ data, isLoading: false, error: null });
-  //   } catch (error) {
-  //     setResponse({ data: null, isLoading: false, error: error.message });
-  //   }
-  // }, [])
-
-  // const postData = useCallback(async () => {
-  //   try {
-  //     const { data } = await api.post(url, payload, headerOptions);
-  //     setResponse({ data, isLoading: false, error: null });
-  //   } catch (error) {
-  //     setResponse({ data: null, isLoading: false, error: error.message });
-  //   }
-  // }, [])
-
-  // const callAPI = useCallback(() => {
-  //   return method === 'get' ? getData() : postData()
-  // }, [method, getData, postData]);
-
-  return [res, callAPI];
+  return [response, getUserLists];
 }
-
-// async function getData(url, headerOptions) {
-//   const { data } = await api.get(url, headerOptions);
-//   return data ? data : []
-// }
-
-// async function postData(url, payload, headerOptions) {
-//   const { data } = await api.post(url, payload, headerOptions);
-//   return data ? data : []
-// }
 
 export default useFetchData;

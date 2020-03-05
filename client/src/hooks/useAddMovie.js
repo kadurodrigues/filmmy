@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import useSessionStorage from './useSessionStorage';
 import api from '../services/api';
 
-const useAddMovie = ({ url, payload, headerOptions }) => {
-  const [res, setResponse] = useState({ data: null, isLoading: false, error: null });
+const useAddMovie = ({ payload }) => {
+  const [response, setResponse] = useState({ movie: {}, isLoading: false, error: null });
+  const [token] = useSessionStorage('token');
+  const [options, setOptions] = useState({ headers: { 'authorization': `Bearer ${token}` }});
 
-  const callAPI = useCallback(() => {
-    setResponse(prevState => ({ ...prevState, isLoading: true }));
+  const addMovie = useCallback(async () => {
+    try {
+      const { data: { movie } } = await api.post('/lists/add-movie', payload, options);
+      setResponse({ movie, isLoading: false, error: null });
+    } catch (error) {
+      setResponse({ movie: {}, isLoading: false, error: error.message });
+    }
+  }, [payload, options])
 
-    api.post(url, payload, headerOptions).then(res => {
-      setResponse({ data: res.data, isLoading: false, error: null });
-    }).catch((error) => {
-      setResponse({ data: null, isLoading: false, error: error.message });
-      setError(error.message)
-    })
-
-  }, [url, payload, headerOptions]);
-
-  return [res, callAPI];
+  return [response, addMovie];
 }
 
 export default useAddMovie;

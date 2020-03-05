@@ -10,57 +10,52 @@ import {
   ListItemIcon,
   Button
 } from '@material-ui/core';
+
 import { Movie } from '@material-ui/icons';
 
 import Spinner from '../Spinner';
 import Alert from '../Alert';
-
-import useFetchUserLists from '../../hooks/useFetchUserLists';
 import { useDialogStyles } from '../../styles/globalStyles';
 import { useStore } from '../../store';
 import useFetchData from '../../hooks/useFetchData';
+import useAddMovie from '../../hooks/useAddMovie';
 
 function UserLists({ movieSelected, open, onClose }) {
+  const { state: { lists } } = useStore();
   const [listIndex, setListIndex] = useState(0);
   const [listSelected, setListSelected] = useState('');
-  // const { state: { lists } } = useStore();
-  // const {
-  //   isLoading,
-  //   hasRequestFailed,
-  //   setHasRequestFailed, 
-  //   errorMessage
-  // } = useFetchUserLists();
-
-  const { state: { user } } = useStore();
-  const [{ data, isLoading, error }, callAPI] = useFetchData({
-    url: `/lists/${user._id}`,
-    headerOptions: { headers: { 'authorization': 'Bearer ast8fazd777ashbsdf787' } }
-  });
-
-  console.log(data);
+  const [movieData, setMovieData] = useState({});
+  const [response, addMovie] = useAddMovie({ payload: movieData })
+  const [{ isLoading, error }, getUserLists] = useFetchData();
 
   useEffect(() => {
-    callAPI();
-  }, []);
-
+    if (!lists.length) {
+      getUserLists();
+    }
+  }, [lists, getUserLists]);
 
   const classes = useDialogStyles();
+  console.log('lists', lists);
 
   const handleListSelected = (listId, index) => {
     setListIndex(index);
     setListSelected(listId);
+    setMovieData({
+      listId,
+      movie: movieSelected
+    })
   }
 
   const handleAddMovieList = () => {
-    callAPI();
+    console.log(movieData);
   }
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Select a List:</DialogTitle>
-      {/* <DialogContent className={classes.dialogContent}>
+      <DialogContent className={classes.dialogContent}>
         {isLoading && <Spinner />}
-        {hasRequestFailed && <Alert severity="error" message={error} onClose={() => setHasRequestFailed(false)} />}
+        {error && <Alert severity="error" message={error} onClose={() => null} />}
         <List component="nav" aria-label="user movies list">
           {lists.length ? lists.map(({ _id, name }, index) => (
             <ListItem
@@ -76,31 +71,12 @@ function UserLists({ movieSelected, open, onClose }) {
             </ListItem>
           )) : null}
         </List>
-      </DialogContent> */}
-      <DialogContent className={classes.dialogContent}>
-        {isLoading && <Spinner />}
-        {error && <Alert severity="error" message={error} onClose={() => null} />}
-        <List component="nav" aria-label="user movies list">
-          {data !== null && data.lists.map(({ _id, name }, index) => (
-            <ListItem
-              key={_id}
-              button
-              selected={listIndex === index}
-              onClick={() => handleListSelected(_id, index)}
-            >
-              <ListItemIcon>
-                <Movie />
-              </ListItemIcon>
-              <ListItemText primary={name} />
-            </ListItem>
-          ))}
-        </List>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleAddMovieList} color="primary">
+        <Button onClick={() => addMovie()} color="primary">
           Add Movie
         </Button>
       </DialogActions>

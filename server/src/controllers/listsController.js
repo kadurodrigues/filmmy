@@ -46,7 +46,7 @@ module.exports = {
   /** Add a movie to a list */
   async addMovie(req, res) {
     const { listId, movie } = req.body;
-    const { error } = addMovieValidation(req.body);
+    const { error } = addMovieValidation({listId});
     
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -61,7 +61,7 @@ module.exports = {
         errorMessage: 'List Not Found'
       });
 
-      res.status(200).send({ list });
+      res.status(200).send({ movie });
     } catch (error) {
       res.status(500).send(error.message);
     }
