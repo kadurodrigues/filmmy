@@ -10,40 +10,37 @@ import { setUserListsDialog } from '../../actions';
 function Movie() {
   const [openLogin, setOpenLogin] = useState(false);
   const { state: { movieId } } = useLocation();
-  const { state: { user, shouldOpenUserListsDialog, isLogged }, dispatch } = useStore();
+  const { state: { user, shouldOpenUserListsDialog }, dispatch } = useStore();
   const { movie } = useFetchMovie(movieId);
   
-  const handleOpenDialog = () => {
-    return user !== null ? dispatch(setUserListsDialog(true)) : setOpenLogin(true)
+  const handleAddMovie = () => {
+    return user ? dispatch(setUserListsDialog(true)) : setOpenLogin(true)
   }
 
-  // const handleCloseLogin = ({ isLogged }) => {
-  //   return isLogged ? dispatch(setUserListsDialog(true)) : setOpenLogin(false);
-  // }
+  const handleAuthDialog = ({ isLogged }) => {
+    return isLogged ? handleUserLogged() : setOpenLogin(false)
+  }
+
+  const handleUserLogged = () => {
+    setOpenLogin(false);
+    dispatch(setUserListsDialog(true));
+  }
 
   return (
     <>
       <Link to="/">Back</Link>
       {movie && <h2>{movie.title}</h2>}
-      <Button variant="contained" color="primary" onClick={handleOpenDialog}>
+      <Button variant="contained" color="primary" onClick={handleAddMovie}>
         Add Movie
       </Button>
-      {!isLogged && <Auth open={openLogin} />}
-      {isLogged && 
-        <UserLists 
-          open={true} 
-          movieSelected={movie} 
-          onClose={() => dispatch(setUserListsDialog(false))} 
-        />
-      }
-      {/* {openLogin && <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />}
+      {openLogin && <Auth open={openLogin} onClose={handleAuthDialog} />}
       {shouldOpenUserListsDialog && 
         <UserLists 
           open={shouldOpenUserListsDialog} 
           movieSelected={movie} 
           onClose={() => dispatch(setUserListsDialog(false))} 
         />
-      } */}
+      }
     </>
   )
 }

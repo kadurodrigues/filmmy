@@ -10,7 +10,7 @@ import Alert from '../Alert';
 import { AppBar, Dialog, Tabs, Tab } from '@material-ui/core';
 import { ALERT_MSG } from '../../utils/constants';
 
-function Auth({ open }) {
+function Auth({ open, onClose }) {
   const [tabValue, setTabValue] = useState(0);
   const [isError, setError] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -22,14 +22,13 @@ function Auth({ open }) {
   const handleOnSignIn = async ({ email, password }) => {
     try {
       const {
-        data: { user, token }
+        data: { user: { _id, firstName }, token }
       } = await api.post('/auth', { email, password });
 
       setToken(token);
-      setUser({ _id: user._id, firstName: user.firstName });
-      dispatch(setUserStore({ _id: user._id, firstName: user.firstName }));
-      dispatch(setUserLogging(true));
-      // onClose({ isLogged: true });
+      setUser({ _id, firstName });
+      dispatch(setUserStore({ _id, firstName }));
+      onClose({ isLogged: true });
 
     } catch (error) {
       setAlertSeverity('error');
@@ -44,7 +43,7 @@ function Auth({ open }) {
 
   const handleOnCloseDialog = () => {
     setError(false);
-    dispatch(setUserLogging(false));
+    onClose({ isLogged: false });
   }
 
   return (
