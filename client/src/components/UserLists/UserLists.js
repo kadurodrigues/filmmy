@@ -8,9 +8,12 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Button
+  Button,
+  CircularProgress
 } from '@material-ui/core';
 
+import { green } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/core/styles';
 import { Movie } from '@material-ui/icons';
 
 import Spinner from '../Spinner';
@@ -20,34 +23,45 @@ import { useStore } from '../../store';
 import useFetchData from '../../hooks/useFetchData';
 import useAddMovie from '../../hooks/useAddMovie';
 
+const useStyles = makeStyles(theme => ({
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  progress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
+
 function UserLists({ movieSelected, open, onClose }) {
-  const { state: { lists } } = useStore();
+  const { state: { lists, user } } = useStore();
   const [listIndex, setListIndex] = useState(0);
   const [listSelected, setListSelected] = useState('');
   const [movieData, setMovieData] = useState({});
-  const [response, addMovie] = useAddMovie({ payload: movieData })
+  const [{ isAddingMovie, isSuccess }, addMovie] = useAddMovie({ payload: movieData })
   const [{ isLoading, error }, getUserLists] = useFetchData();
 
   useEffect(() => {
-    if (!lists.length) {
-      getUserLists();
-    }
-  }, [lists, getUserLists]);
+    getUserLists();
+
+  }, [getUserLists]);
 
   const classes = useDialogStyles();
-  console.log('lists', lists);
+  const buttonClasses = useStyles();
 
   const handleListSelected = (listId, index) => {
     setListIndex(index);
     setListSelected(listId);
     setMovieData({
       listId,
+      userId: user._id,
       movie: movieSelected
     })
-  }
-
-  const handleAddMovieList = () => {
-    console.log(movieData);
   }
 
   return (
@@ -57,7 +71,7 @@ function UserLists({ movieSelected, open, onClose }) {
         {isLoading && <Spinner />}
         {error && <Alert severity="error" message={error} onClose={() => null} />}
         <List component="nav" aria-label="user movies list">
-          {lists.length ? lists.map(({ _id, name }, index) => (
+          {lists.length ? lists.map(({ _id, name, movies }, index) => (
             <ListItem
               key={_id}
               button
@@ -67,7 +81,10 @@ function UserLists({ movieSelected, open, onClose }) {
               <ListItemIcon>
                 <Movie />
               </ListItemIcon>
-              <ListItemText primary={name} />
+              <ListItemText
+                primary={name}
+                secondary={`Total Movies: ${movies.length}`}
+              />
             </ListItem>
           )) : null}
         </List>
@@ -76,9 +93,15 @@ function UserLists({ movieSelected, open, onClose }) {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={() => addMovie()} color="primary">
-          Add Movie
-        </Button>
+        <div className={buttonClasses.wrapper}>
+          <Button 
+            color="primary"
+            disabled={isAddingMovie}
+            onClick={() => addMovie()} >
+            Add Movie
+          </Button>
+          {isAddingMovie && <CircularProgress size={14} className={buttonClasses.progress} />}
+        </div>
       </DialogActions>
     </Dialog>
   )

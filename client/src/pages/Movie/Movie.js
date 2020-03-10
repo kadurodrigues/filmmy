@@ -5,24 +5,21 @@ import Auth from '../../components/Auth';
 import UserLists from '../../components/UserLists';
 import { useStore } from '../../store';
 import useFetchMovie from '../../hooks/useFetchMovie';
+import { setUserListsDialog } from '../../actions';
 
 function Movie() {
   const [openLogin, setOpenLogin] = useState(false);
-  const [openUserLists, setOpenUserLists] = useState(false);
   const { state: { movieId } } = useLocation();
-  const { state: { user } } = useStore();
+  const { state: { user, shouldOpenUserListsDialog, isLogged }, dispatch } = useStore();
   const { movie } = useFetchMovie(movieId);
-
+  
   const handleOpenDialog = () => {
-    return user !== null ? setOpenUserLists(true) : setOpenLogin(true)
+    return user !== null ? dispatch(setUserListsDialog(true)) : setOpenLogin(true)
   }
 
-  const handleCloseLogin = ({ isLogged }) => {
-    if (isLogged) {
-      setOpenUserLists(true);
-    }
-    setOpenLogin(false);
-  }
+  // const handleCloseLogin = ({ isLogged }) => {
+  //   return isLogged ? dispatch(setUserListsDialog(true)) : setOpenLogin(false);
+  // }
 
   return (
     <>
@@ -31,8 +28,22 @@ function Movie() {
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Add Movie
       </Button>
-      {openLogin && <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />}
-      {openUserLists && <UserLists open={openUserLists} movieSelected={movie} onClose={() => setOpenUserLists(false)} />}
+      {!isLogged && <Auth open={openLogin} />}
+      {isLogged && 
+        <UserLists 
+          open={true} 
+          movieSelected={movie} 
+          onClose={() => dispatch(setUserListsDialog(false))} 
+        />
+      }
+      {/* {openLogin && <Auth open={openLogin} onClose={event => handleCloseLogin(event)} />}
+      {shouldOpenUserListsDialog && 
+        <UserLists 
+          open={shouldOpenUserListsDialog} 
+          movieSelected={movie} 
+          onClose={() => dispatch(setUserListsDialog(false))} 
+        />
+      } */}
     </>
   )
 }

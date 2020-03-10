@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { SET_USER, SET_USER_LISTS } from '../actions/types';
+import { SET_USER, SET_USER_LISTS, SET_USER_LISTS_DIALOG, SET_USER_LOGGING } from '../actions/types';
 
 const StoreContext = createContext();
 
 const initialState = {
   user: JSON.parse(window.sessionStorage.getItem('user')) || null,
-  lists: []
+  lists: [],
+  shouldOpenUserListsDialog: false,
+  isUserLogged: false,
 };
 
 const reducer = (state, action) => {
@@ -13,7 +15,11 @@ const reducer = (state, action) => {
     case SET_USER:
       return {...state, user: action.payload}
     case SET_USER_LISTS:
-      return {...state, lists: action.payload} 
+      return {...state, lists: action.payload}
+    case SET_USER_LISTS_DIALOG:
+      return {...state, lists: action.payload, shouldOpenUserListsDialog: action.payload} 
+    case SET_USER_LOGGING:
+      return {...state, isUserLogged: action.payload}
     default:
       throw new Error();
   }

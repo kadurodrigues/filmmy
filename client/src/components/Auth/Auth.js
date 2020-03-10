@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { setUserStore } from '../../actions';
+import { setUserStore, setUserLogging } from '../../actions';
 import { useStore } from '../../store';
 import useSessionStorage from '../../hooks/useSessionStorage';
 import api from '../../services/api';
@@ -10,7 +10,7 @@ import Alert from '../Alert';
 import { AppBar, Dialog, Tabs, Tab } from '@material-ui/core';
 import { ALERT_MSG } from '../../utils/constants';
 
-function Auth({ open, onClose }) {
+function Auth({ open }) {
   const [tabValue, setTabValue] = useState(0);
   const [isError, setError] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState('');
@@ -28,7 +28,8 @@ function Auth({ open, onClose }) {
       setToken(token);
       setUser({ _id: user._id, firstName: user.firstName });
       dispatch(setUserStore({ _id: user._id, firstName: user.firstName }));
-      onClose({ isLogged: true });
+      dispatch(setUserLogging(true));
+      // onClose({ isLogged: true });
 
     } catch (error) {
       setAlertSeverity('error');
@@ -38,12 +39,12 @@ function Auth({ open, onClose }) {
   }
 
   const handleOnSignUp = async ({ firstName, lastName, email, password }) => {
-    onClose();
+    // onClose();
   }
 
   const handleOnCloseDialog = () => {
     setError(false);
-    onClose({ isLogged: false });
+    dispatch(setUserLogging(false));
   }
 
   return (
@@ -68,8 +69,8 @@ function Auth({ open, onClose }) {
       {tabValue === 0 ? (
         <SingIn onSignIn={handleOnSignIn} onClose={handleOnCloseDialog} />
       ) : (
-          <SignUp onSignUp={handleOnSignUp} onClose={onClose} />
-        )}
+        <SignUp onSignUp={handleOnSignUp} onClose={handleOnCloseDialog} />
+      )}
     </Dialog>
   )
 }

@@ -8,7 +8,7 @@ const useFetchData = () => {
   const { state: { user }, dispatch } = useStore();
   const [response, setResponse] = useState({ lists: [], isLoading: false, error: null });
   const [token] = useSessionStorage('token');
-  const [options, setOptions] = useState({ headers: { 'authorization': `Bearer ${token}` }});
+  const [options, setOptions] = useState({ headers: { 'authorization': `Bearer ${token}` } });
 
   const getUserLists = useCallback(async () => {
     try {
