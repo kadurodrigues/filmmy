@@ -24,3 +24,4 @@ yarn-error.log*
 db.json
 routes.json
 /mock-server
+*.icloud

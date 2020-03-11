@@ -61,7 +61,7 @@ module.exports = {
         errorMessage: 'List Not Found'
       });
 
-      res.status(200).send({ movie });
+      res.status(200).send({ message: 'Movie Added successfull!' });
     } catch (error) {
       res.status(500).send(error.message);
     }

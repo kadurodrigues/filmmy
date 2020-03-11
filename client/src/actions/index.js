@@ -1,4 +1,10 @@
-import { SET_USER, SET_USER_LISTS, SET_USER_LISTS_DIALOG, SET_USER_LOGGING,SET_SNACKBAR } from './types';
+import { 
+  SET_USER, 
+  SET_USER_LISTS, 
+  SET_USER_LISTS_DIALOG, 
+  SET_USER_LOGGING,
+  SET_SNACKBAR 
+} from './types';
 
 export const setUserStore = user => ({
   type: SET_USER,

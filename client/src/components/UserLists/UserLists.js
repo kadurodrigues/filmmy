@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  AppBar,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -28,7 +29,11 @@ function UserLists({ movieSelected, open, onClose }) {
   const [listSelected, setListSelected] = useState('');
   const [movieData, setMovieData] = useState({});
   const [{ isAddingMovie }, addMovie] = useAddMovie({ payload: movieData })
-  const [{ isLoading, error }, getUserLists] = useFetchData();
+  const [{ isFetchingList }, getUserLists] = useFetchData();
+  const [error, setError] = useState({ 
+    show: false, 
+    message: ''
+  });
 
   useEffect(() => {
     getUserLists();
@@ -38,6 +43,7 @@ function UserLists({ movieSelected, open, onClose }) {
   const classes = useDialogStyles();
 
   const handleListSelected = (listId, index) => {
+    setError({ show: false })
     setListIndex(index);
     setListSelected(listId);
     setMovieData({
@@ -47,37 +53,52 @@ function UserLists({ movieSelected, open, onClose }) {
     })
   }
 
+  const handleAddMovie = () => {
+    if (listSelected === '') {
+      setError({ show: true, message: 'First, select a list.' });
+    } else {
+      addMovie();
+    }
+  }
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Select a List:</DialogTitle>
+      <AppBar position="static" color="primary">
+        <DialogTitle id="form-dialog-title">Select a List:</DialogTitle>
+      </AppBar>
       <DialogContent className={classes.dialogContent}>
-        {isLoading && <Spinner />}
-        {error && <Alert severity="error" message={error} onClose={() => null} />}
-        <List component="nav" aria-label="user movies list">
-          {lists.length ? lists.map(({ _id, name, movies }, index) => (
-            <ListItem
-              key={_id}
-              button
-              selected={listIndex === index}
-              onClick={() => handleListSelected(_id, index)}
-            >
-              <ListItemIcon>
-                <Movie />
-              </ListItemIcon>
-              <ListItemText
-                primary={name}
-                secondary={`Total Movies: ${movies.length}`}
-              />
-            </ListItem>
-          )) : null}
-        </List>
+        {error.show && 
+        <Alert 
+          severity="warning" 
+          message={error.message} 
+          onClose={() => setError({ show: false })} />
+        }
+        {isFetchingList 
+          ? <Spinner /> 
+          : <List component="nav" aria-label="user movies list">
+            {lists.length ? lists.map(({ _id, name, movies }, index) => (
+              <ListItem
+                key={_id}
+                button
+                selected={listIndex === index}
+                onClick={() => handleListSelected(_id, index)}
+              >
+                <ListItemIcon>
+                  <Movie />
+                </ListItemIcon>
+                <ListItemText
+                  primary={name}
+                  secondary={`Total Movies: ${movies.length}`}
+                />
+              </ListItem>
+            )) : null}
+          </List>}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <ProgressButton label="Add Movie" isDisabled={isAddingMovie} onClick={() => addMovie()} />
+        <ProgressButton label="Add Movie" isDisabled={isAddingMovie} onClick={handleAddMovie} />
       </DialogActions>
     </Dialog>
   )

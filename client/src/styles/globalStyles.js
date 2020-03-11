@@ -9,9 +9,13 @@ export const useFormStyles = makeStyles(theme => ({
 
 export const useDialogStyles = makeStyles(theme => ({
   dialogContentText: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   dialogContent: {
-    textAlign: 'center'
+    textAlign: 'center',
+    minHeight: '150px'
+  },
+  circularProgress: {
+    marginTop: '80px'
   }
 }));

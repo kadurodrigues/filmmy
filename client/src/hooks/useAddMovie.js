@@ -6,7 +6,7 @@ import { setUserLists, setUserListsDialog, setSnackbar } from '../actions';
 import { SNACKBAR_TYPE, SNACKBAR_MESSAGES } from '../utils/constants';
 
 const useAddMovie = ({ payload }) => {
-  const { dispatch: { userDispatch, feedbackDispatch} } = useStore();
+  const { dispatch: { feedbackDispatch } } = useStore();
   const [response, setResponse] = useState({ lists: [], isAddingMovie: false, isSuccess: false, error: null });
   const [token] = useSessionStorage('token');
   const [options, setOptions] = useState({ headers: { 'authorization': `Bearer ${token}` } });
@@ -14,9 +14,7 @@ const useAddMovie = ({ payload }) => {
   const addMovie = useCallback(async () => {
     try {
       setResponse({ isAddingMovie: true });
-      const { data: { lists } } = await api.post('/lists/add-movie', payload, options);
-      setResponse({ lists, isAddingMovie: false, isSuccess: true, error: null });
-      userDispatch(setUserLists(lists));
+      const { data } = await api.post('/lists/add-movie', payload, options);
       feedbackDispatch(setUserListsDialog(false));
       feedbackDispatch(setSnackbar({
         show: true,

@@ -9,17 +9,18 @@ const useFetchData = () => {
     state: { user }, 
     dispatch: { userDispatch } 
   } = useStore();
-  const [response, setResponse] = useState({ lists: [], isLoading: false, error: null });
+  const [response, setResponse] = useState({ lists: [], isFetchingList: false, error: null });
   const [token] = useSessionStorage('token');
   const [options, setOptions] = useState({ headers: { 'authorization': `Bearer ${token}` } });
 
   const getUserLists = useCallback(async () => {
     try {
+      setResponse({ isFetchingList: true })
       const { data: { lists } } = await api.get(`/lists/${user._id}`, options);
-      setResponse({ lists, isLoading: false, error: null });
+      setResponse({ lists, isFetchingList: false, error: null });
       userDispatch(setUserLists(lists));
     } catch (error) {
-      setResponse({ lists: [], isLoading: false, error: error.message });
+      setResponse({ lists: [], isFetchingList: false, error: error.message });
     }
   }, [user, userDispatch, options])
 
