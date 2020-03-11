@@ -8,42 +8,26 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Button,
-  CircularProgress
+  Button
 } from '@material-ui/core';
 
-import { green } from '@material-ui/core/colors';
-import { makeStyles } from '@material-ui/core/styles';
 import { Movie } from '@material-ui/icons';
 
 import Spinner from '../Spinner';
+import ProgressButton from '../ProgressButton';
 import Alert from '../Alert';
+
 import { useDialogStyles } from '../../styles/globalStyles';
 import { useStore } from '../../store';
 import useFetchData from '../../hooks/useFetchData';
 import useAddMovie from '../../hooks/useAddMovie';
-
-const useStyles = makeStyles(theme => ({
-  wrapper: {
-    margin: theme.spacing(1),
-    position: 'relative',
-  },
-  progress: {
-    color: green[500],
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-  },
-}));
 
 function UserLists({ movieSelected, open, onClose }) {
   const { state: { lists, user } } = useStore();
   const [listIndex, setListIndex] = useState(0);
   const [listSelected, setListSelected] = useState('');
   const [movieData, setMovieData] = useState({});
-  const [{ isAddingMovie, isSuccess }, addMovie] = useAddMovie({ payload: movieData })
+  const [{ isAddingMovie }, addMovie] = useAddMovie({ payload: movieData })
   const [{ isLoading, error }, getUserLists] = useFetchData();
 
   useEffect(() => {
@@ -52,7 +36,6 @@ function UserLists({ movieSelected, open, onClose }) {
   }, [getUserLists]);
 
   const classes = useDialogStyles();
-  const buttonClasses = useStyles();
 
   const handleListSelected = (listId, index) => {
     setListIndex(index);
@@ -63,6 +46,7 @@ function UserLists({ movieSelected, open, onClose }) {
       movie: movieSelected
     })
   }
+
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} aria-labelledby="form-dialog-title">
@@ -93,15 +77,7 @@ function UserLists({ movieSelected, open, onClose }) {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <div className={buttonClasses.wrapper}>
-          <Button 
-            color="primary"
-            disabled={isAddingMovie}
-            onClick={() => addMovie()} >
-            Add Movie
-          </Button>
-          {isAddingMovie && <CircularProgress size={14} className={buttonClasses.progress} />}
-        </div>
+        <ProgressButton label="Add Movie" isDisabled={isAddingMovie} onClick={() => addMovie()} />
       </DialogActions>
     </Dialog>
   )

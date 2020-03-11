@@ -1,4 +1,4 @@
-import { SET_USER, SET_USER_LISTS, SET_USER_LISTS_DIALOG, SET_USER_LOGGING } from './types';
+import { SET_USER, SET_USER_LISTS, SET_USER_LISTS_DIALOG, SET_USER_LOGGING,SET_SNACKBAR } from './types';
 
 export const setUserStore = user => ({
   type: SET_USER,
@@ -18,4 +18,13 @@ export const setUserListsDialog = shouldOpen => ({
 export const setUserLogging = isLogged => ({
   type: SET_USER_LOGGING,
   payload: isLogged
+});
+
+export const setSnackbar = ({ show, message, options }) => ({
+  type: SET_SNACKBAR,
+  payload: {
+    show, 
+    message,
+    options
+  }
 });

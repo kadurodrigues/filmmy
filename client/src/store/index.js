@@ -1,32 +1,24 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { SET_USER, SET_USER_LISTS, SET_USER_LISTS_DIALOG } from '../actions/types';
+import { userReducer, userStates } from './reducers/user-reducer';
+import { feedbackReducer, feedbackStates } from './reducers/feedback-reducer';
 
 const StoreContext = createContext();
 
-const initialState = {
-  user: JSON.parse(window.sessionStorage.getItem('user')) || null,
-  lists: [],
-  shouldOpenUserListsDialog: false
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case SET_USER:
-      return {...state, user: action.payload}
-    case SET_USER_LISTS:
-      return {...state, lists: action.payload}
-    case SET_USER_LISTS_DIALOG:
-      return {...state, shouldOpenUserListsDialog: action.payload} 
-    default:
-      throw new Error();
-  }
-}
-
 export const StoreProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [userState, userDispatch] = useReducer(userReducer, userStates);
+  const [feedbackState, feedbackDispatch] = useReducer(feedbackReducer, feedbackStates)
 
   return (
-    <StoreContext.Provider value={{ state, dispatch }}>
+    <StoreContext.Provider value={{ 
+      state: {
+        ...userState,
+        ...feedbackState
+      }, 
+      dispatch: {
+        userDispatch,
+        feedbackDispatch
+      }
+    }}>
       {children}
     </StoreContext.Provider>
   )
