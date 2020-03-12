@@ -22,9 +22,10 @@ import { useDialogStyles } from '../../styles/globalStyles';
 import { useStore } from '../../store';
 import useFetchData from '../../hooks/useFetchData';
 import useAddMovie from '../../hooks/useAddMovie';
+import { setCreateListsDialog, setUserListsDialog } from '../../actions';
 
 function UserLists({ movieSelected, open, onClose }) {
-  const { state: { lists, user } } = useStore();
+  const { state: { lists, user }, dispatch: { feedbackDispatch } } = useStore();
   const [listIndex, setListIndex] = useState(0);
   const [listSelected, setListSelected] = useState('');
   const [movieData, setMovieData] = useState({});
@@ -61,6 +62,11 @@ function UserLists({ movieSelected, open, onClose }) {
     }
   }
 
+  const handleCreateList = () => {
+    feedbackDispatch(setUserListsDialog(false));
+    feedbackDispatch(setCreateListsDialog(true));
+  }
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} aria-labelledby="form-dialog-title">
       <AppBar position="static" color="primary">
@@ -91,7 +97,12 @@ function UserLists({ movieSelected, open, onClose }) {
                   secondary={`Total Movies: ${movies.length}`}
                 />
               </ListItem>
-            )) : null}
+            )) : 
+              <>
+                <p>You do not have any list created.</p>
+                <Button color="primary" onClick={handleCreateList}>Crate List</Button>
+              </>
+            }
           </List>}
       </DialogContent>
       <DialogActions>

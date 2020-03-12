@@ -17,7 +17,7 @@ function Auth({ open, onClose }) {
   const [alertMessage, setAlertMessage] = useState('');
   const [, setToken] = useSessionStorage('token', '');
   const [, setUser] = useSessionStorage('user', '');
-  const { dispatch } = useStore();
+  const { dispatch: { userDispatch } } = useStore();
 
   const handleOnSignIn = async ({ email, password }) => {
     try {
@@ -27,7 +27,7 @@ function Auth({ open, onClose }) {
 
       setToken(token);
       setUser({ _id, firstName });
-      dispatch(setUserStore({ _id, firstName }));
+      userDispatch(setUserStore({ _id, firstName }));
       onClose({ isLogged: true });
 
     } catch (error) {

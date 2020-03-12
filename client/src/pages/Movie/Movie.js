@@ -6,7 +6,8 @@ import UserLists from '../../components/UserLists';
 import SnackBar from '../../components/Snackbar';
 import { useStore } from '../../store';
 import useFetchMovie from '../../hooks/useFetchMovie';
-import { setUserListsDialog } from '../../actions';
+import { setUserListsDialog, setCreateListsDialog } from '../../actions';
+import CreateListDialog from '../../components/CreateListDialog';
 
 function Movie() {
   const [openLogin, setOpenLogin] = useState(false);
@@ -14,7 +15,7 @@ function Movie() {
   const { movie } = useFetchMovie(movieId);
   
   const { 
-    state: { user, shouldOpenUserListsDialog, shouldOpenSnackbar }, 
+    state: { user, shouldOpenUserListsDialog, shouldOpenCreateListDialog, shouldOpenSnackbar }, 
     dispatch: { feedbackDispatch } 
   } = useStore();
   
@@ -44,6 +45,12 @@ function Movie() {
           open={shouldOpenUserListsDialog} 
           movieSelected={movie} 
           onClose={() => feedbackDispatch(setUserListsDialog(false))} 
+        />
+      }
+      { shouldOpenCreateListDialog && 
+        <CreateListDialog 
+          open={shouldOpenCreateListDialog}
+          onClose={() => feedbackDispatch(setCreateListsDialog(false))} 
         />
       }
       { shouldOpenSnackbar && <SnackBar open={shouldOpenSnackbar} /> }

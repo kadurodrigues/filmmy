@@ -1,7 +1,8 @@
-import { SET_USER_LISTS_DIALOG, SET_SNACKBAR } from '../../actions/types';
+import { SET_USER_LISTS_DIALOG, SET_SNACKBAR, SET_CREATE_LIST_DIALOG } from '../../actions/types';
 
 export const feedbackStates = {
   shouldOpenUserListsDialog: false,
+  shouldOpenCreateListDialog: false,
   shouldOpenSnackbar: false,
   snackbarMessage: '',
   snackbarOptions: null
@@ -13,6 +14,11 @@ export const feedbackReducer = (state, action) => {
       return {
         ...state, 
         shouldOpenUserListsDialog: action.payload 
+      }
+    case SET_CREATE_LIST_DIALOG:
+      return {
+        ...state,
+        shouldOpenCreateListDialog: action.payload
       }
     case SET_SNACKBAR:
       return {

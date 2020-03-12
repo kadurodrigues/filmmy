@@ -3,7 +3,8 @@ import {
   SET_USER_LISTS, 
   SET_USER_LISTS_DIALOG, 
   SET_USER_LOGGING,
-  SET_SNACKBAR 
+  SET_SNACKBAR,
+  SET_CREATE_LIST_DIALOG
 } from './types';
 
 export const setUserStore = user => ({
@@ -18,6 +19,11 @@ export const setUserLists = lists => ({
 
 export const setUserListsDialog = shouldOpen => ({
   type: SET_USER_LISTS_DIALOG,
+  payload: shouldOpen
+});
+
+export const setCreateListsDialog = shouldOpen => ({
+  type: SET_CREATE_LIST_DIALOG,
   payload: shouldOpen
 });
 
